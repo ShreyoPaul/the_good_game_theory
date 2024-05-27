@@ -6,18 +6,17 @@ import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
-import Table from './Table.jsx';
-import Scanners from './Scanners.jsx';
+import Card from './Card.jsx';
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App Component={<Table />} />,
+    element: <App />,
   },
   {
-    path: "/scanners",
-    element: <App Component={<Scanners />} />,
-  },
+    path: "/:id",
+    element: <Card />
+  }
 ]);
 
 
