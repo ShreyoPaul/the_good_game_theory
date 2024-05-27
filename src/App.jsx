@@ -4,15 +4,7 @@ import { HiBell, HiCurrencyRupee } from "react-icons/hi";
 import { MdCandlestickChart, MdDashboard, MdDocumentScanner, MdInsertChart } from "react-icons/md";
 import { NavLink } from "react-router-dom";
 
-
-
-
-{/* <RouterProvider router={router} /> */ }
-
-
 export default function App(props) {
-  // pink- #E27498
-
   return (
     <main className="w-full bg-[#F8F8FB] min-h-screen h-screen overflow-hidden">
       <div className="flex flex-row py-4 pl-4 h-full gap-12">
