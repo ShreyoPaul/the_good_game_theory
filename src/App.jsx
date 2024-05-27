@@ -1,52 +1,62 @@
-/* eslint-disable react/prop-types */
-import { FaNoteSticky, FaRegNoteSticky } from "react-icons/fa6";
-import { HiBell, HiCurrencyRupee } from "react-icons/hi";
-import { MdCandlestickChart, MdDashboard, MdDocumentScanner, MdInsertChart } from "react-icons/md";
-import { NavLink } from "react-router-dom";
+import { useEffect, useState } from "react"
+import { BiSearch } from "react-icons/bi"
+import { NavLink } from "react-router-dom"
 
-export default function App(props) {
+
+export default function App() {
+  const [data, setData] = useState([])
+  const [search, setSearch] = useState("")
+  const [searchRes, setSearchRes] = useState([])
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await (await fetch('https://api.sampleapis.com/beers/ale')).json()
+      if (res) {
+        setData(res)
+      }
+    }
+    fetchData()
+  }, [])
+  useEffect(() => {
+    if (search === "" || !search.trim()) return
+    const filteredProducts = data.filter(product =>
+      product.name.toLowerCase().includes(search.toLowerCase())
+    );
+    setSearchRes(filteredProducts)
+  }, [data, search])
+
   return (
-    <main className="w-full bg-[#F8F8FB] min-h-screen h-screen overflow-hidden">
-      <div className="flex flex-row py-4 pl-4 h-full gap-12">
-        <div className="w-[80px] text-white bg-gradient-to-b from-[#0F3556] to-[#17558b] h-full rounded-xl p-4 ">
-          <div className="text-[40px] flex flex-col justify-around items-center h-full">
-            <NavLink className="cursor-pointer" to={'/'}>
-              <MdDashboard className="hover:bg-[#ffffff40] p-2 duration-300 transform rounded-lg cursor-pointer" />
-            </NavLink>
-            <NavLink className="cursor-pointer" to={'/scanners'}>
-              <MdCandlestickChart className="hover:bg-[#ffffff40] p-2 duration-300 transform rounded-lg cursor-pointer" />
-            </NavLink>
-            <NavLink className="cursor-pointer" to={'/'}>
-              <MdInsertChart className="hover:bg-[#ffffff40] p-2 duration-300 transform rounded-lg cursor-pointer" />
-            </NavLink>
-            <NavLink className="cursor-pointer" to={'/'}>
-              <MdDocumentScanner className="hover:bg-[#ffffff40] p-2 duration-300 transform rounded-lg cursor-pointer" />
-            </NavLink>
-            <NavLink className="cursor-pointer" to={'/'}>
-              <HiBell className="hover:bg-[#ffffff40] p-2 duration-300 transform rounded-lg cursor-pointer" />
-            </NavLink>
-            <NavLink className="cursor-pointer" to={'/'}>
-              <FaRegNoteSticky className="hover:bg-[#ffffff40] p-2 duration-300 transform rounded-lg cursor-pointer" />
-            </NavLink>
-            <NavLink className="cursor-pointer" to={'/'}>
-              <FaNoteSticky className="hover:bg-[#ffffff40] p-2 duration-300 transform rounded-lg cursor-pointer" />
-            </NavLink>
-            <NavLink className="cursor-pointer" to={'/'}>
-              <HiCurrencyRupee className="hover:bg-[#ffffff40] p-2 duration-300 transform rounded-lg cursor-pointer" />
-            </NavLink>
-          </div>
+    <main className="w-full bg-[#eff2f7] min-h-screen">
+      <div>
+        <div className="flex flex-row items-center justify-center py-12">
+          <div className="p-4 px-5 rounded-l-xl bg-slate-200"><BiSearch /></div>
+          <input onChange={(e) => setSearch(e.target.value)} type="text" className="rounded-r-xl p-3 px-6 text-base max-w-[400px] w-[40vw] outline-none" />
         </div>
+        <div className="flex flex-row flex-wrap justify-center items-center gap-8 px-12 ">
+          {
+            !search ? data?.map((item, i) => {
+              return (
+                <NavLink to={`/${item.id}`} className="rounded-lg p-4  bg-white w-[250px] hover:scale-[1.03] duration-200 transform" key={i}>
+                  <img src={item.image} alt={item.name} className=" h-[250px] object-cover w-full" />
+                  <div className="flex flex-row justify-between gap-4 mt-4 ">
+                    <div className="text-sm font-semibold">{item.name}</div>
+                    <div className="text-xl font-bold">{item.price}</div>
+                  </div>
+                </NavLink>
+              )
+            })
 
-
-        <div className="p-4 w-full overflow-auto">
-          <div className="flex flex-row w-full h-auto justify-between mb-8">
-            <NavLink className="" to={"/"}>
-              <img src="https://unfluke.in/static/media/cropped_unfluke_full.148e5bfc.png" className="w-[100px] h-auto" />
-            </NavLink>
-            <img src="https://qash-react-omega.vercel.app/static/media/2.54e869c1f9d853c8f5f8.png" className="w-[30px] h-[30px]" />
-          </div>
-
-          {props.Component}
+              : searchRes?.map((item, i) => {
+                return (
+                  <div className="rounded-lg p-4  bg-white w-[250px] hover:scale-[1.03] duration-200 transform" key={i}>
+                    <img src={item.image} alt={item.name} className=" h-[250px] object-cover w-full" />
+                    <div className="flex flex-row justify-between gap-4 mt-4 ">
+                      <div className="text-sm font-semibold">{item.name}</div>
+                      <div className="text-xl font-bold">{item.price}</div>
+                    </div>
+                  </div>
+                )
+              })
+          }
         </div>
       </div>
     </main>
